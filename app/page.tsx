@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 const invitationUrl = "https://tally.so/r/b5XZp6";
 const stories = [
   { image:"/assets/portrait-balcony.png", label:"Home, in the everyday", quote:"The places where people know you best." },
@@ -10,8 +10,10 @@ const stories = [
   { image:"/assets/conversation-prompt.png", label:"A conversation worth making time for", quote:"Good introductions leave room for everyone to be heard." },
 ];
 export default function Home() {
-  useEffect(()=>{const observer=new IntersectionObserver(entries=>entries.forEach(entry=>entry.isIntersecting&&entry.target.classList.add("on")),{threshold:.14}); document.querySelectorAll(".reveal:not(.hero .reveal)").forEach(el=>observer.observe(el)); return()=>observer.disconnect();},[]);
+  const [loaderVisible,setLoaderVisible]=useState(true); const [loaderLeaving,setLoaderLeaving]=useState(false);
+  useEffect(()=>{const observer=new IntersectionObserver(entries=>entries.forEach(entry=>entry.isIntersecting&&entry.target.classList.add("on")),{threshold:.14}); document.querySelectorAll(".reveal:not(.hero .reveal)").forEach(el=>observer.observe(el)); const hero=new Image(); const source=window.matchMedia("(max-width: 760px)").matches?"/assets/hero-conversation-mobile.png":"/assets/hero-conversation.png"; const began=Date.now(); let removed=false; let fallback=0; let dismiss=0; const finish=()=>{if(removed)return;window.clearTimeout(fallback);window.setTimeout(()=>{if(!removed){setLoaderLeaving(true);dismiss=window.setTimeout(()=>!removed&&setLoaderVisible(false),520);}},Math.max(0,620-(Date.now()-began)));}; hero.onload=finish;hero.onerror=finish;hero.src=source;if(hero.complete)finish();fallback=window.setTimeout(finish,4200);return()=>{removed=true;observer.disconnect();window.clearTimeout(fallback);window.clearTimeout(dismiss);};},[]);
   return <main>
+    {loaderVisible&&<div className={`page-loader${loaderLeaving?" is-leaving":""}`} aria-hidden={loaderLeaving}><div className="loader-orbit"><img src="/sainoo-mark.png" alt="" className="loader-mark"/></div><p>SAINOO</p><span>Making introductions with care</span></div>}
     <header className="nav"><div className="nav-inner wrap"><a className="brand" href="#top" aria-label="Sainoo home"><img className="brand-mark" src="/sainoo-mark.png" alt=""/><span className="brand-name">Sainoo</span><span className="brand-script">साइनो</span></a><nav className="nav-links nav-invite-only" aria-label="Main navigation"><a className="nav-cta" href={invitationUrl} target="_blank" rel="noreferrer">Ask for an invitation</a></nav></div></header>
     <style jsx global>{`@media(max-width:760px){.nav-links.nav-invite-only{position:static;display:flex;flex-direction:row;opacity:1;visibility:visible;background:transparent;font:inherit}.nav-links.nav-invite-only .nav-cta{padding:9px 13px;border:1px solid rgba(242,241,235,.65);border-radius:100px;color:var(--paper-light);font-size:11px}}`}</style>
     <section className="hero" id="top"><div className="hero-image"/><div className="hero-overlay"/><div className="thread-hero"><span/><b/></div><div className="hero-content wrap"><div className="hero-copy"><h1 className="reveal delay">Some introductions<br/>deserve to be<br/><em>made well.</em></h1></div><div className="hero-bottom reveal delay"><p>For people who call Sikkim home—and the families and friends who want good things for them.</p><a className="button" href={invitationUrl} target="_blank" rel="noreferrer">Ask for an invitation ↗</a></div></div></section>
