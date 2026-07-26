@@ -11,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Sainoo — A good introduction has its own pace",
     description: "Thoughtful introductions for people who call Sikkim home.",
-    icons: { icon: "/favicon.svg" },
+    icons: { icon: "/sainoo-mark.png", apple: "/sainoo-mark.png" },
     openGraph: {
       title: "Sainoo — A good introduction has its own pace",
       description: "Thoughtful introductions for people who call Sikkim home.",
